@@ -1,0 +1,9 @@
+.page_content {
+	padding-top: 80px;
+}
+
+.page {
+	margin: 0 auto;
+	position: relative;
+	min-height: 100vh;
+}
