@@ -1,0 +1,28 @@
+.userInfo_root {
+	display: flex;
+	align-items: center;
+}
+
+.userInfo_avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 10px;
+	object-fit: cover;
+}
+
+.userInfo_userName {
+	font-weight: 500;
+	font-size: 14px;
+}
+
+.userInfo_userDetails {
+	display: flex;
+	flex-direction: column;
+	height: 40px;
+}
+
+.userInfo_additional {
+	font-size: 12px;
+	opacity: 0.6;
+}
