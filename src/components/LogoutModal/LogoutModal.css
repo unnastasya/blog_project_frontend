@@ -1,0 +1,28 @@
+.logoutModal {
+	width: 400px;
+	height: 200px;
+	background: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+}
+
+.modal_buttons {
+	display: flex;
+	width: 200px;
+	justify-content: space-between;
+}
+
+.logout_div {
+	position: absolute;
+	width: 400px;
+	height: 100px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
