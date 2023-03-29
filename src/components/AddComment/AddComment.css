@@ -1,0 +1,16 @@
+.addComment_root {
+	display: flex;
+	margin-top: 10px;
+	padding-bottom: 20px;
+	margin-right: 20px;
+	margin-left: 17px;
+}
+.addComment_avatar {
+	margin-right: 15px;
+}
+.addComment_form {
+	width: 100%;
+}
+.addComment_form button {
+	margin-top: 10px;
+}

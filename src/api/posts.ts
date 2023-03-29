@@ -70,3 +70,11 @@ export const editPost = (data: {
 		}
 	);
 };
+
+export const getLastComments = () => {
+    axios.get(`http://localhost:4444/posts/comments` ,{
+        headers: {
+            authorization: window.localStorage.getItem("token"),
+        },
+    })
+}
