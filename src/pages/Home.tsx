@@ -41,9 +41,15 @@ const Home = () => {
 		dispatch(PostsActions.requestTags());
 	}, [dispatch]);
 
+    const fetchComments = useCallback(() => {
+		dispatch(PostsActions.requestAllComments());
+	}, [dispatch]);
+
 	useEffect(() => {
 		fetchPosts();
 		fetchTags();
+        fetchComments();
+        console.log(comments)
 	}, [fetchPosts, dispatch]);
 
 	return (

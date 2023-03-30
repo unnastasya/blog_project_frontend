@@ -71,10 +71,8 @@ export const editPost = (data: {
 	);
 };
 
-export const getLastComments = () => {
-    axios.get(`http://localhost:4444/posts/comments` ,{
-        headers: {
-            authorization: window.localStorage.getItem("token"),
-        },
-    })
-}
+export const getLastComments = (): Promise<any> => {
+	return axios
+		.get(`http://localhost:4444/posts/comments`)
+		.then((response) => response.data);
+};

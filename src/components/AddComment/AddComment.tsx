@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router";
 import { useAppSelector } from "../../store";
 import { DataSelector } from "../../store/auth";
+import qs from "qs";
 
 import "./AddComment.css";
 
@@ -13,11 +14,17 @@ export function AddComment() {
 	const { id } = useParams();
 
 	const addComment = () => {
-        console.log("comment", comment)
+		console.log("comment", comment);
+		const field = {
+			user: { fullName: user.fullName, avatarUrl: user.avatarUrl },
+			comment: comment,
+		};
+
+		console.log("user", field);
 		axios
 			.post(
-				`http://localhost:4444/posts/${id}/addComment`,
-				{ comment: comment },
+				`http://localhost:4444/posts/addComment/${id}`,
+				qs.stringify(field),
 				{
 					headers: {
 						authorization: window.localStorage.getItem("token"),
@@ -31,8 +38,7 @@ export function AddComment() {
 		setComment(comment);
 	};
 
-    console.log("id", id)
-    
+	console.log("id", id);
 
 	return (
 		<>

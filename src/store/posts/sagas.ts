@@ -38,8 +38,10 @@ function* getAllTagsSaga() {
 }
 
 function* getLastCommentsSaga() {
+    console.log("comments")
     try {
         const comments: any[] = yield call(getLastComments);
+        console.log("getCOMMENTS", comments)
         yield put(PostsActions.successAllComments(comments));
     } catch (error) {
         yield put(PostsActions.failureAllComments())

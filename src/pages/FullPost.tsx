@@ -52,7 +52,6 @@ export function FullPost() {
 			)}
 			<SideBlock title="Комментарии">
 				<SideComments
-					items={comments}
 				/>
 				<AddComment />
 			</SideBlock>
