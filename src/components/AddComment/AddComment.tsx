@@ -32,6 +32,7 @@ export function AddComment() {
 				}
 			)
 			.then((response) => response.data);
+		setComment("");
 	};
 
 	const onChange = (comment: string) => {
