@@ -1,8 +1,8 @@
 import { takeLatest, call, put, select } from "redux-saga/effects";
 import { PostType } from "../../types/postType";
-import { deletePost, getAllTags, getLastComments, getOnePost, getPosts, getTags } from "../../api/posts"
+import { deletePost, getAllTags, getLastComments, getOnePost, getPosts, getPostsWithOneTag, getTags } from "../../api/posts"
 import { PostsActions } from "./slice";
-import { deleteRequestDataSelector, requestDataSelector } from "./selectors";
+import { deleteRequestDataSelector, requestDataSelector, tagsRequestSelector } from "./selectors";
 
 function* getPostsSaga() {
 	try {
@@ -11,7 +11,22 @@ function* getPostsSaga() {
 		);
 		yield put(PostsActions.successPosts(posts));
 	} catch (e: any) {
-		yield put(PostsActions.failurePosts());
+		yield put(PostsActions.failurePosts(e));
+	}
+}
+
+
+function* getPostsWithTagsSaga() {
+	try {
+        const requestData: string = yield select(
+			tagsRequestSelector
+		);
+		const posts: PostType[] = yield call(
+			getPostsWithOneTag, requestData
+		);
+		yield put(PostsActions.successPosts(posts));
+	} catch (e: any) {
+		yield put(PostsActions.failurePosts(e));
 	}
 }
 
@@ -31,6 +46,7 @@ function* getAllTagsSaga() {
 		const tags: string[] = yield call(
 			getAllTags
 		);
+        console.log("TAGS", tags)
 		yield put(PostsActions.successAllTags(tags));
 	} catch (e: any) {
 		yield put(PostsActions.failureAllTags());
@@ -60,7 +76,7 @@ function* deletePostSaga() {
 		);
         yield put(PostsActions.successPosts(posts));
     } catch (error) {
-        yield put(PostsActions.failurePosts());
+        yield put(PostsActions.failurePosts(error));
     }
 }
 
@@ -118,5 +134,12 @@ export function* watchgetGetLastCommentsSaga() {
 	yield takeLatest(
 		PostsActions.requestAllComments.type,
 		getLastCommentsSaga
+	);
+}
+
+export function* watchGetPostsWithTagsSaga() {
+	yield takeLatest(
+		PostsActions.requestPostsWithTags.type,
+		getPostsWithTagsSaga
 	);
 }

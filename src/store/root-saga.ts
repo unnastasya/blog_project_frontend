@@ -10,6 +10,7 @@ import {
 	watchgetGetLastCommentsSaga,
 	watchgetOnePostsSaga,
 	watchGetPostsSaga,
+	watchGetPostsWithTagsSaga,
 	watchGetTagsSaga,
 } from "./posts";
 
@@ -23,4 +24,5 @@ export function* rootSaga() {
 	yield fork(watchGetAuthMeSaga);
 	yield fork(watchGetAllTagsSaga);
 	yield fork(watchgetGetLastCommentsSaga);
+	yield fork(watchGetPostsWithTagsSaga);
 }

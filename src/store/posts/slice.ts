@@ -5,8 +5,9 @@ export type ProductStateType = {
 	posts: PostType[];
 	isLoadingPosts: boolean;
 	hasErrorPosts: boolean;
+	errorMessage?: string;
 	tags: string[];
-    comments: any[];
+	comments: any[];
 	isLoadingTags: boolean;
 	hasErrorTags: boolean;
 	onePost?: PostType;
@@ -17,7 +18,8 @@ export type ProductStateType = {
 		id: string;
 		token: string;
 	};
-    allTags?: string[]
+	allTags?: string[];
+	tagRequestData: string;
 };
 
 const initialState: ProductStateType = {
@@ -25,13 +27,14 @@ const initialState: ProductStateType = {
 	isLoadingPosts: true,
 	hasErrorPosts: false,
 	tags: [],
-    comments: [],
+	comments: [],
 	isLoadingTags: false,
 	hasErrorTags: false,
 	isLoadingOnePost: false,
 	hasErrorOnePost: false,
 	requestData: "",
-    allTags: []
+	allTags: [],
+	tagRequestData: "",
 };
 const NAME = "Posts";
 
@@ -47,12 +50,15 @@ const successPosts: CaseReducer<ProductStateType, PayloadAction<PostType[]>> = (
 	state.isLoadingPosts = false;
 	state.hasErrorPosts = false;
 	state.posts = payload;
-
 };
 
-const failurePosts: CaseReducer<ProductStateType> = (state) => {
+const failurePosts: CaseReducer<ProductStateType, PayloadAction<any>> = (
+	state,
+	action
+) => {
 	state.isLoadingPosts = false;
 	state.hasErrorPosts = true;
+	state.errorMessage = action.payload;
 };
 
 const requestTags: CaseReducer<ProductStateType> = (state) => {
@@ -79,10 +85,10 @@ const requestAllComments: CaseReducer<ProductStateType> = (state) => {
 	state.hasErrorTags = false;
 };
 
-const successAllComments: CaseReducer<ProductStateType, PayloadAction<any[]>> = (
-	state,
-	{ payload }
-) => {
+const successAllComments: CaseReducer<
+	ProductStateType,
+	PayloadAction<any[]>
+> = (state, { payload }) => {
 	state.isLoadingTags = false;
 	state.hasErrorTags = false;
 	state.comments = payload;
@@ -92,7 +98,6 @@ const failureTags: CaseReducer<ProductStateType> = (state) => {
 	state.isLoadingTags = false;
 	state.hasErrorTags = true;
 };
-
 
 const requestAllTags: CaseReducer<ProductStateType> = (state) => {
 	state.isLoadingPosts = true;
@@ -106,7 +111,6 @@ const successAllTags: CaseReducer<ProductStateType, PayloadAction<string[]>> = (
 	state.isLoadingPosts = false;
 	state.hasErrorPosts = false;
 	state.allTags = payload;
-
 };
 
 const failureAllTags: CaseReducer<ProductStateType> = (state) => {
@@ -152,6 +156,20 @@ const changeDeleteData: CaseReducer<
 	console.log(payload);
 	state.deletePostData = payload.payload;
 };
+
+const changeTagData: CaseReducer<ProductStateType, PayloadAction<string>> = (
+	state,
+	{ payload }
+) => {
+	state.tagRequestData = payload;
+};
+
+const requestPostsWithTags: CaseReducer<ProductStateType> = (state) => {
+	state.isLoadingPosts = true;
+	state.hasErrorPosts = false;
+	state.posts = [];
+};
+
 export const { actions: PostsActions, reducer: PostsReducer } = createSlice({
 	name: NAME,
 	initialState: initialState,
@@ -168,11 +186,13 @@ export const { actions: PostsActions, reducer: PostsReducer } = createSlice({
 		changeRequestsData,
 		deletePost,
 		changeDeleteData,
-        requestAllTags,
-        successAllTags,
-        failureAllTags,
-        requestAllComments,
-        successAllComments,
-        failureAllComments,
+		requestAllTags,
+		successAllTags,
+		failureAllTags,
+		requestAllComments,
+		successAllComments,
+		failureAllComments,
+		changeTagData,
+		requestPostsWithTags,
 	},
 });

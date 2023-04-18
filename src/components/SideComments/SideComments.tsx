@@ -25,9 +25,9 @@ export function SideComments({ items }: SideCommentsProps) {
 		axios
 			.get(`http://localhost:4444/posts/${id}/comments`)
 			.then((response) => setComments(response.data));
-	}, [comments]);
+	}, []);
 	return (
-		<List>
+		<List className="sideComments">
 			{items
 				? items.map((obj) => (
 						<React.Fragment>

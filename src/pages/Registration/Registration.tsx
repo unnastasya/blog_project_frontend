@@ -1,20 +1,18 @@
 import { Avatar, Button, Paper, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
 	AuthActions,
 	isAuthUserSelector,
-	UserRequestDataSelector,
 } from "../../store/auth";
 
 import "./Registration.css";
 
 export function Registration() {
 	const dispatch = useAppDispatch();
-	const requestData = useAppSelector(UserRequestDataSelector);
 	const isAuth = useAppSelector(isAuthUserSelector);
 	const inputFileRef = useRef<HTMLInputElement | null>(null);
 	const [imageURL, setImageURL] = useState<string>("");
@@ -22,7 +20,7 @@ export function Registration() {
 	const {
 		register,
 		handleSubmit,
-		setError,
+		
 		formState: { errors, isValid },
 	} = useForm({
 		defaultValues: {
@@ -33,8 +31,6 @@ export function Registration() {
 		},
 		mode: "onChange",
 	});
-
-	let loginData = { email: "", password: "" };
 
 	const onSubmit = (value: {
 		fullName: string;
@@ -75,7 +71,7 @@ export function Registration() {
 	}
 
 	return (
-		<div>
+		<div className="registrationPage">
 			<Paper className="registration_root">
 				<Typography className="registration_title" variant="h5">
 					Создание аккаунта

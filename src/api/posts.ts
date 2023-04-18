@@ -12,6 +12,16 @@ export const getPosts = (): Promise<PostType[]> => {
 		.then((response) => response.data);
 };
 
+export const getPostsWithOneTag = (tag: string): Promise<PostType[]> => {
+	return axios
+		.get<PostType[]>(`http://localhost:4444/posts`, {
+			headers: {
+				authorization: window.localStorage.getItem("token"),
+			},
+		})
+		.then((response) => response.data.filter((post) => post.tags.includes(tag)));
+};
+
 export const getTags = (): Promise<string[]> => {
 	return axios
 		.get<string[]>(`http://localhost:4444/posts/lastTags`, {

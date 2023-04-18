@@ -17,3 +17,6 @@ export const deleteRequestDataSelector = (state: ApplicationState) => PostsSelec
 export const allTagsSelector = (state: ApplicationState) => PostsSelector(state).allTags
 
 export const lastCommentsSelector = (state: ApplicationState) => PostsSelector(state).comments
+
+export const tagsRequestSelector = (state: ApplicationState) => PostsSelector(state).tagRequestData
+

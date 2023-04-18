@@ -10,11 +10,17 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { LogoutModal } from "../LogoutModal/LogoutModal";
 
 import "../Header/Header.css";
+import { styled } from "@mui/material/styles";
+
+const BootstrapButton = styled(Button)({
+	padding: "6px 5px",
+});
 
 const Header = () => {
 	const dispatch = useAppDispatch();
 	const isAuth = useAppSelector(isAuthUserSelector);
 	const dataUser = useAppSelector(DataSelector);
+	const width = window.outerWidth;
 
 	const onClickLogout = () => {
 		dispatch(AuthActions.changeIsOpenLogoutModal());
@@ -30,14 +36,18 @@ const Header = () => {
 					</a>
 					{dataUser && (
 						<div className="header_user">
-							{dataUser.avatarUrl && (
+							{dataUser?.avatarUrl.length > 21 && (
 								<img
 									className="userInfo_avatar"
 									src={dataUser.avatarUrl}
 									alt={dataUser.fullName}
 								/>
 							)}
-							<p className="header_text">{dataUser.fullName}</p>
+							{width > 480 && (
+								<p className="header_text">
+									{dataUser.fullName}
+								</p>
+							)}
 						</div>
 					)}
 					<div className="header_buttons">
@@ -47,17 +57,20 @@ const Header = () => {
 									to="/add-post"
 									style={{ textDecoration: "none" }}
 								>
-									<Button variant="contained">
+									<BootstrapButton
+										className="homePage__button"
+										variant="contained"
+									>
 										Написать статью
-									</Button>
+									</BootstrapButton>
 								</Link>
-								<Button
+								<BootstrapButton
 									onClick={onClickLogout}
 									variant="contained"
 									color="error"
 								>
 									Выйти
-								</Button>
+								</BootstrapButton>
 							</>
 						) : (
 							<>
@@ -65,15 +78,17 @@ const Header = () => {
 									to="/login"
 									style={{ textDecoration: "none" }}
 								>
-									<Button variant="outlined">Войти</Button>
+									<BootstrapButton variant="outlined">
+										Войти
+									</BootstrapButton>
 								</Link>
 								<Link
 									to="/register"
 									style={{ textDecoration: "none" }}
 								>
-									<Button variant="contained">
+									<BootstrapButton variant="contained">
 										Создать аккаунт
-									</Button>
+									</BootstrapButton>
 								</Link>
 							</>
 						)}

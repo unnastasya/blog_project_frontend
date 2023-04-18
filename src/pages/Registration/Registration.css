@@ -1,8 +1,13 @@
 .registration_root {
-	width: 400px;
 	padding: 50px;
 	border: 1px solid #dedede;
 	margin: 50px auto;
+}
+
+.registrationPage {
+    width: 90vw;
+    max-width: 500px;
+	margin: 0 auto;
 }
 
 .registration_field {

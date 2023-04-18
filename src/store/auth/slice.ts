@@ -1,5 +1,4 @@
 import { CaseReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { PostType } from "../../types/postType";
 
 export type ProductStateType = {
 	data: any;

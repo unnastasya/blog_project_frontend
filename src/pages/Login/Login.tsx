@@ -1,32 +1,25 @@
 import { Button, Paper, TextField, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router";
-import { postAuth } from "../../api/auth";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
 	AuthActions,
-	DataSelector,
 	errorMessageSelector,
-	hasErrorDataSelector,
 	isAuthUserSelector,
-	UserRequestDataSelector,
 } from "../../store/auth";
 
 import "./Login.css";
 
 export function Login() {
 	const dispatch = useAppDispatch();
-	const requestData = useAppSelector(UserRequestDataSelector);
-	const data = useAppSelector(DataSelector);
 	const isAuth = useAppSelector(isAuthUserSelector);
-	const hasError = useAppSelector(hasErrorDataSelector);
 	const errorMessage = useAppSelector(errorMessageSelector);
 	const {
 		register,
 		handleSubmit,
-		setError,
-		formState: { errors, isValid },
+
+		formState: { errors },
 	} = useForm({
 		defaultValues: {
 			email: "",
@@ -45,7 +38,7 @@ export function Login() {
 		return <Navigate to="/" />;
 	}
 	return (
-		<div >
+		<div className="loginPage">
 			<Paper className="login_root">
 				<Typography className="login_title" variant="h5">
 					Вход в аккаунт
@@ -77,11 +70,9 @@ export function Login() {
 					>
 						Войти
 					</Button>
-                    {errorMessage && <p>{errorMessage}</p>}
+					{errorMessage && <p>{errorMessage}</p>}
 				</form>
-                
 			</Paper>
-			
 		</div>
 	);
 }

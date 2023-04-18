@@ -6,15 +6,14 @@ import React, {
 	useRef,
 	useState,
 } from "react";
-import { Navigate, useActionData, useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { DataSelector, isAuthUserSelector } from "../../store/auth";
 import SimpleMdeReact from "react-simplemde-editor";
 import "./AddPost.css";
 import axios from "axios";
 import qs from "qs";
-import { useDispatch } from "react-redux";
-import { getAllTags, getOnePost } from "../../api/posts";
+import { getOnePost } from "../../api/posts";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -36,7 +35,9 @@ export function AddPost() {
 	const inputFileRef = useRef<HTMLInputElement | null>(null);
 	const [imageURL, setImageURL] = useState<string>("");
 	const Activeuser = useAppSelector(DataSelector);
-	const tagsData = useAppSelector(allTagsSelector);
+    const [tagsData, setTagsData] = useState(useAppSelector(allTagsSelector));
+    const [tagInput, setTagInput] = useState("");
+	
 
 	const onChange = useCallback((value: any) => {
 		setText(value);
@@ -85,6 +86,7 @@ export function AddPost() {
 	);
 
 	useEffect(() => {
+        console.log("aaaaaa")
 		dispatch(PostsActions.requestAllTags());
 		if (id) {
 			getOnePost(id).then((res) => {
@@ -95,7 +97,7 @@ export function AddPost() {
 				setImageURL(res.imageUrl);
 			});
 		}
-	}, [id]);
+	}, [id, dispatch]);
 
 	const onChangeTitle = (title: string) => {
 		setTitle(title);
@@ -156,16 +158,22 @@ export function AddPost() {
 		const {
 			target: { value },
 		} = event;
-		setTags(
-			typeof value === "string" ? value.split(",") : value
-		);
+		setTags(typeof value === "string" ? value.split(",") : value);
 		console.log(tags);
 	};
 
-	const names = ["mem", "d", "tad"];
+
+    const handleChangeTagInput = (event: string) => {
+		setTagInput(event)
+	};
+
+    const addTag = () => {
+        setTagsData((prev) => prev ? [...prev, tagInput] : [tagInput]);
+        setTagInput("")
+    }
 
 	return (
-		<div >
+		<div>
 			<Paper style={{ padding: 30 }}>
 				<Button
 					onClick={() => inputFileRef.current?.click()}
@@ -227,6 +235,22 @@ export function AddPost() {
 						))}
 					</Select>
 				</FormControl>
+                
+                <TextField
+					className="title"
+					variant="standard"
+					placeholder="тег"
+					value={tagInput}
+					onChange={(e) => handleChangeTagInput(e.target.value)}
+					fullWidth
+				/>
+                <Button
+					onClick={addTag}
+					variant="outlined"
+					size="large"
+				>
+					+
+				</Button>
 				{/* <TextField
 					className="tags"
 					variant="standard"

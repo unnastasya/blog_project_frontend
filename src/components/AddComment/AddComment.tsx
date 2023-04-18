@@ -44,7 +44,7 @@ export function AddComment() {
 	return (
 		<>
 			<div className="addComment_root">
-				<Avatar className="addComment_avatar" src={user.avatarUrl} />
+				<Avatar className="addComment_avatar" src={user?.avatarUrl} />
 				<div className="addComment_form">
 					<TextField
 						label="Написать комментарий"
