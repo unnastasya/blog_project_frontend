@@ -1,7 +1,7 @@
-import { Button, Paper, TextField, Typography } from "@mui/material";
+import { Alert, Button, Paper, TextField, Typography } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
 	AuthActions,
@@ -15,10 +15,11 @@ export function Login() {
 	const dispatch = useAppDispatch();
 	const isAuth = useAppSelector(isAuthUserSelector);
 	const errorMessage = useAppSelector(errorMessageSelector);
+    const navigate = useNavigate();
+    
 	const {
 		register,
 		handleSubmit,
-
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
@@ -35,8 +36,9 @@ export function Login() {
 	};
 
 	if (isAuth) {
-		return <Navigate to="/" />;
+		navigate("/")
 	}
+
 	return (
 		<div className="loginPage">
 			<Paper className="login_root">
@@ -70,7 +72,7 @@ export function Login() {
 					>
 						Войти
 					</Button>
-					{errorMessage && <p>{errorMessage}</p>}
+					{errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 				</form>
 			</Paper>
 		</div>

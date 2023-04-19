@@ -31,7 +31,6 @@ export function AddComment() {
 					},
 				}
 			)
-			.then((response) => response.data);
 		setComment("");
 	};
 

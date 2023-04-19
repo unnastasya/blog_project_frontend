@@ -38,7 +38,7 @@ export function Registration() {
 		password: string;
 		avatarUrl: string;
 	}) => {
-		value.avatarUrl= `http://localhost:4444${imageURL}` ;
+		value.avatarUrl= imageURL;
 		dispatch(AuthActions.changeRegisterUserRequestData(value));
 		dispatch(AuthActions.requestRegister());
 	};

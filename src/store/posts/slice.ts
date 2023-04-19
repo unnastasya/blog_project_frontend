@@ -41,6 +41,7 @@ const NAME = "Posts";
 const requestPosts: CaseReducer<ProductStateType> = (state) => {
 	state.isLoadingPosts = true;
 	state.hasErrorPosts = false;
+	state.posts = [];
 };
 
 const successPosts: CaseReducer<ProductStateType, PayloadAction<PostType[]>> = (

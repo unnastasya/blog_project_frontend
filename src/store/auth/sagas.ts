@@ -36,7 +36,7 @@ function* getAuthMeSaga() {
 			yield put(AuthActions.successAuth(data));
 		} else {
 			console.log(data);
-			throw new SyntaxError(data.response.data.message);
+			throw new Error(data.response.data.message);
 		}
 	} catch (e: any) {
 		yield put(AuthActions.failureAuth(e.message));

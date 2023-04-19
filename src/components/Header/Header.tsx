@@ -36,7 +36,7 @@ const Header = () => {
 					</a>
 					{dataUser && (
 						<div className="header_user">
-							{dataUser?.avatarUrl.length > 21 && (
+							{dataUser?.avatarUrl && (
 								<img
 									className="userInfo_avatar"
 									src={dataUser.avatarUrl}

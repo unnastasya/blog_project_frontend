@@ -4,7 +4,7 @@ import EyeIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import CommentIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import "./Post.css";
 import { PostSkeleton } from "./PostSkeleton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Clear";
@@ -30,6 +30,7 @@ interface PostProps {
 	// isEditable?: boolean;
 	post: PostType;
 	children?: any;
+	isFullPost: boolean;
 }
 
 export function Post({
@@ -47,9 +48,13 @@ export function Post({
 	// isEditable,
 	post,
 	children,
+	isFullPost,
 }: PostProps) {
 	const dispatch = useDispatch();
 	const activeUser = useAppSelector(DataSelector);
+	const navigate = useNavigate();
+
+	console.log("Isfullpost", post.isFullPost);
 
 	const onClickRemove = () => {
 		console.log(post.user);
@@ -67,10 +72,17 @@ export function Post({
 	}
 
 	const clickTag = (tag: any) => {
-		console.log(tag);
-		dispatch(PostsActions.changeTagData(tag));
-		dispatch(PostsActions.requestPostsWithTags());
+		if (!isFullPost) {
+			console.log(tag);
+			dispatch(PostsActions.changeTagData(tag));
+			dispatch(PostsActions.requestPostsWithTags());
+		} else {
+			dispatch(PostsActions.changeTagData(tag));
+			navigate(`/`);
+			dispatch(PostsActions.requestPostsWithTags());
+		}
 	};
+
 
 	return (
 		<div className="post_root">

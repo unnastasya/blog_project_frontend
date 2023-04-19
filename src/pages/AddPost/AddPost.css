@@ -28,3 +28,7 @@
 .buttons button {
     margin-right: 15px;
 }
+.tags__block {
+    display: flex;
+    justify-content: space-between;
+}

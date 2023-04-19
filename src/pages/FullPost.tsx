@@ -41,7 +41,7 @@ export function FullPost() {
 					// viewsCount={post.viewsCount}
 					// commentsCount={post.commentsCount}
 					// tags={post.tags}
-					// isFullPost={post.isFullPost}
+					isFullPost={true}
 				>
 					{" "}
                     <ReactMarkdown children={post.text} />

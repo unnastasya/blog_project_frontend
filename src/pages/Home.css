@@ -9,6 +9,9 @@
     .homePage__sides {
         width: 30%;
     }
+    .homePage__tags {
+        margin-bottom: 10px;
+    }
 }
 
 @media (max-width: 960px) {
@@ -18,6 +21,9 @@
     }
     .homePage__posts, .homePage__sides {
         width: 100%;
+    }
+    .homePage__tags {
+        margin-bottom: 10px;
     }
 }
 
@@ -30,13 +36,25 @@
     .homePage__tags, .homePage__comments {
 		width: 48%
 	}
+    .homePage__tags {
+        margin-bottom: 0px;
+    }
 }
 
 .activeTag {
     display: inline-block;
 	font-size: 18px;
-	margin: 15px 0 ;
+	margin: 15px 10px 15px 0 ;
 	background-color: rgba(67, 97, 238, 0.4);
 	border-radius: 3px;
 	padding: 5px 10px;
+}
+
+.homePage__sides {
+    margin-bottom: 40px;
+}
+
+.tagsFilter {
+    display: flex;
+    align-items: center;
 }

@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import "./SideComments.css";
+import { getOnePostComments } from "../../api/comments";
 
 interface SideCommentsProps {
 	items?: any[];
@@ -20,12 +21,17 @@ export function SideComments({ items }: SideCommentsProps) {
 	const { id } = useParams();
 
 	const [comments, setComments] = useState<any[]>([]);
-
+	console.log("comment id", id);
 	useEffect(() => {
-		axios
-			.get(`http://localhost:4444/posts/${id}/comments`)
-			.then((response) => setComments(response.data));
+        const getComments = async () => {
+            const data = await getOnePostComments(id || 0)
+            setComments(data)
+        };
+        getComments();
+
 	}, []);
+
+
 	return (
 		<List className="sideComments">
 			{items
