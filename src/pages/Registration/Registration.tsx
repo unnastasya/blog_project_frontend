@@ -1,13 +1,12 @@
-import { Avatar, Button, Paper, TextField, Typography } from "@mui/material";
-import axios from "axios";
 import React, { useRef, useState } from "react";
+import { Avatar, Button, Paper, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store";
-import {
-	AuthActions,
-	isAuthUserSelector,
-} from "../../store/auth";
+import { AuthActions, isAuthUserSelector } from "../../store/auth";
+import { uploadAvatar } from "../../api/register";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { registrationValidationSchema } from "./RegistrationValidation";
 
 import "./Registration.css";
 
@@ -20,7 +19,6 @@ export function Registration() {
 	const {
 		register,
 		handleSubmit,
-		
 		formState: { errors, isValid },
 	} = useForm({
 		defaultValues: {
@@ -30,6 +28,7 @@ export function Registration() {
 			avatarUrl: "",
 		},
 		mode: "onChange",
+		resolver: yupResolver(registrationValidationSchema),
 	});
 
 	const onSubmit = (value: {
@@ -38,7 +37,7 @@ export function Registration() {
 		password: string;
 		avatarUrl: string;
 	}) => {
-		value.avatarUrl= imageURL;
+		value.avatarUrl = "http://localhost:4444" + imageURL;
 		dispatch(AuthActions.changeRegisterUserRequestData(value));
 		dispatch(AuthActions.requestRegister());
 	};
@@ -48,18 +47,9 @@ export function Registration() {
 			const dataImage = new FormData();
 			const file = event.target.files[0];
 			dataImage.append("image", file);
-
 			console.log(dataImage);
-			const { data } = await axios.post(
-				"http://localhost:4444/uploadAvatar",
-				dataImage,
-				{
-					headers: {
-						authorization: window.localStorage.getItem("token"),
-					},
-				}
-			);
-			setImageURL(data.url);
+			const res = await uploadAvatar(dataImage);
+			setImageURL(res.url);
 		} catch (error) {
 			console.warn(error);
 			alert("Ошибка при загрузке файла");
@@ -96,9 +86,7 @@ export function Registration() {
 						label="Полное имя"
 						error={Boolean(errors.fullName?.message)}
 						helperText={errors.fullName?.message}
-						{...register("fullName", {
-							required: "Укажите полное имя",
-						})}
+						{...register("fullName")}
 						fullWidth
 					/>
 					<TextField
@@ -106,7 +94,7 @@ export function Registration() {
 						label="E-mail"
 						error={Boolean(errors.email?.message)}
 						helperText={errors.email?.message}
-						{...register("email", { required: "Укажите почту" })}
+						{...register("email")}
 						fullWidth
 					/>
 					<TextField
@@ -114,9 +102,7 @@ export function Registration() {
 						label="Пароль"
 						error={Boolean(errors.password?.message)}
 						helperText={errors.password?.message}
-						{...register("password", {
-							required: "Укажите пароль",
-						})}
+						{...register("password")}
 						fullWidth
 					/>
 					<Button

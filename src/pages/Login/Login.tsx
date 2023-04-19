@@ -1,7 +1,7 @@
-import { Alert, Button, Paper, TextField, Typography } from "@mui/material";
 import React from "react";
+import { Alert, Button, Paper, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
 	AuthActions,
@@ -10,13 +10,15 @@ import {
 } from "../../store/auth";
 
 import "./Login.css";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginValidationSchema } from "./LoginValidation";
 
 export function Login() {
 	const dispatch = useAppDispatch();
 	const isAuth = useAppSelector(isAuthUserSelector);
 	const errorMessage = useAppSelector(errorMessageSelector);
-    const navigate = useNavigate();
-    
+	const navigate = useNavigate();
+
 	const {
 		register,
 		handleSubmit,
@@ -27,6 +29,7 @@ export function Login() {
 			password: "",
 		},
 		mode: "onChange",
+		resolver: yupResolver(loginValidationSchema),
 	});
 
 	const onSubmit = (value: { email: string; password: string }) => {
@@ -36,7 +39,7 @@ export function Login() {
 	};
 
 	if (isAuth) {
-		navigate("/")
+		navigate("/");
 	}
 
 	return (
@@ -72,7 +75,9 @@ export function Login() {
 					>
 						Войти
 					</Button>
-					{errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+					{errorMessage && (
+						<Alert severity="error">{errorMessage}</Alert>
+					)}
 				</form>
 			</Paper>
 		</div>
