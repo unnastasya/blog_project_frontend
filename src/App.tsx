@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
-import Home from "./pages/Home";
-import { FullPost } from "./pages/FullPost";
+import Home from "./pages/Home/Home";
+import { FullPost } from "./pages/FullPost/FullPost";
 import { AddPost } from "./pages/AddPost/AddPost";
 import { Login } from "./pages/Login/Login";
 import { Registration } from "./pages/Registration/Registration";
@@ -22,7 +22,7 @@ function App() {
             
             <Routes>
            
-			<Route path="/" element={<Page children />}>
+			<Route path="/" element={<Page />}>
 				<Route index element={<Home />}></Route>
 				<Route path="/posts/:id" element={<FullPost />} />
 				<Route path="/posts/:id/edit" element={<AddPost />} />

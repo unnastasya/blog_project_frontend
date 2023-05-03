@@ -38,7 +38,6 @@ const Home = () => {
 	}, [dispatch]);
 
 	const fetchTags = useCallback(() => {
-		dispatch(PostsActions.requestTags());
 		dispatch(PostsActions.requestAllTags());
 	}, [dispatch]);
 

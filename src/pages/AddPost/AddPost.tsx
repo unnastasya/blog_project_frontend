@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
 import { useAppSelector } from "../../store";
-import { DataSelector, isAuthUserSelector } from "../../store/auth";
+import { userDataSelector, isAuthUserSelector } from "../../store/auth";
 import SimpleMdeReact from "react-simplemde-editor";
 import "./AddPost.css";
 import axios from "axios";
@@ -40,7 +40,7 @@ export function AddPost() {
 	const navigate = useNavigate();
 	const inputFileRef = useRef<HTMLInputElement | null>(null);
 	const isAuth = useAppSelector(isAuthUserSelector);
-	const ActiveUser = useAppSelector(DataSelector);
+	const ActiveUser = useAppSelector(userDataSelector);
 	const [title, setTitle] = useState<string>("");
 	const [text, setText] = useState<string>("");
 	const [tags, setTags] = useState<string[]>([]);
