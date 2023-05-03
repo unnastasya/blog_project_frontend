@@ -2,78 +2,43 @@ import React from "react";
 import { UserInfo } from "../UserInfo/UserInfo";
 import EyeIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import CommentIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
-import "./Post.css";
 import { PostSkeleton } from "./PostSkeleton";
 import { Link, useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
-
 import DeleteIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import { useAppSelector } from "../../store";
 import { PostsActions } from "../../store/posts";
 import { useDispatch } from "react-redux";
-import { DataSelector } from "../../store/auth";
-import { PostType } from "../../types/postType";
+import { userDataSelector } from "../../store/auth";
+import { PostType } from "../../types/PostType";
+
+import "./Post.css";
 
 interface PostProps {
-	// id: number;
-	// title: string;
-	// createdAt: string;
-	// imageUrl: string;
-	// user: any;
-	// viewsCount: number;
-	// commentsCount: number;
-	// tags: any;
-	// children?: any;
-	// isFullPost: any;
-	// isLoading?: boolean;
-	// isEditable?: boolean;
 	post: PostType;
-	children?: any;
+	children?: React.ReactNode;
 	isFullPost: boolean;
 }
 
-export function Post({
-	// id,
-	// title,
-	// createdAt,
-	// imageUrl,
-	// user,
-	// viewsCount,
-	// commentsCount,
-	// tags,
-	// children,
-	// isFullPost,
-	// isLoading,
-	// isEditable,
-	post,
-	children,
-	isFullPost,
-}: PostProps) {
+export function Post({ post, children, isFullPost }: PostProps) {
 	const dispatch = useDispatch();
-	const activeUser = useAppSelector(DataSelector);
 	const navigate = useNavigate();
-
-	console.log("Isfullpost", post.isFullPost);
+	const activeUser = useAppSelector(userDataSelector);
 
 	const onClickRemove = () => {
-		console.log(post.user);
 		dispatch(
-			PostsActions.changeDeleteData({
+			PostsActions.changeDeletePostData({
 				id: String(post._id),
 				token: activeUser.token,
 			})
 		);
 		dispatch(PostsActions.deletePost());
+		if (isFullPost) navigate(`/`);
 	};
 
-	if (post.isLoading) {
-		return <PostSkeleton />;
-	}
-
-	const clickTag = (tag: any) => {
+	const clickTag = (tag: string) => {
 		if (!isFullPost) {
-			console.log(tag);
 			dispatch(PostsActions.changeTagData(tag));
 			dispatch(PostsActions.requestPostsWithTags());
 		} else {
@@ -83,6 +48,9 @@ export function Post({
 		}
 	};
 
+	if (post.isLoading) {
+		return <PostSkeleton />;
+	}
 
 	return (
 		<div className="post_root">

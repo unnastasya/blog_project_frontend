@@ -1,50 +1,64 @@
+import React, { useEffect, useState } from "react";
 import { Avatar, Button, TextField } from "@mui/material";
-import axios from "axios";
-import React, { useState } from "react";
 import { useParams } from "react-router";
-import { useAppSelector } from "../../store";
-import { DataSelector } from "../../store/auth";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { userDataSelector } from "../../store/auth";
+import { PostsActions } from "../../store/posts";
+import { CommentType } from "../../types/CommentType";
+import axios from "axios";
 import qs from "qs";
 
 import "./AddComment.css";
 
 export function AddComment() {
-	const user = useAppSelector(DataSelector);
-	const [comment, setComment] = useState<string>("");
+	const dispatch = useAppDispatch();
 	const { id } = useParams();
+	const activeUser = useAppSelector(userDataSelector);
+	const [comment, setComment] = useState<string>("");
 
-	const addComment = () => {
-		console.log("comment", comment);
-		const field = {
-			user: { fullName: user.fullName, avatarUrl: user.avatarUrl },
-			comment: comment,
-		};
+	useEffect(() => {
+		dispatch(PostsActions.changeRequestsPostIdData(id || ""));
+	}, []);
 
-		console.log("user", field);
-		axios
-			.post(
-				`http://localhost:4444/posts/addComment/${id}`,
+	const addComment = async (event: any) => {
+		event.preventDefault();
+		if (comment !== "") {
+			const field: CommentType = {
+				user: {
+					fullName: activeUser.fullName,
+					avatarUrl: activeUser.avatarUrl,
+					id: activeUser._id,
+				},
+				text: comment,
+				id: Number(Date.now()),
+				postId: id || "",
+			};
+			await axios.post(
+				`http://localhost:4444/comments/${field.postId}`,
 				qs.stringify(field),
 				{
 					headers: {
 						authorization: window.localStorage.getItem("token"),
 					},
 				}
-			)
-		setComment("");
+			);
+			dispatch(PostsActions.requestOnePost());
+			setComment("");
+		}
 	};
 
 	const onChange = (comment: string) => {
 		setComment(comment);
 	};
 
-	console.log("id", id);
-
 	return (
 		<>
-			<div className="addComment_root">
-				<Avatar className="addComment_avatar" src={user?.avatarUrl} />
-				<div className="addComment_form">
+			<div onSubmit={addComment} className="addComment_root">
+				<Avatar
+					className="addComment_avatar"
+					src={activeUser?.avatarUrl}
+				/>
+				<form className="addComment_form">
 					<TextField
 						label="Написать комментарий"
 						variant="outlined"
@@ -53,11 +67,12 @@ export function AddComment() {
 						value={comment}
 						onChange={(e) => onChange(e.target.value)}
 						fullWidth
+						required
 					/>
-					<Button variant="contained" onClick={addComment}>
+					<Button type="submit" variant="contained">
 						Отправить
 					</Button>
-				</div>
+				</form>
 			</div>
 		</>
 	);

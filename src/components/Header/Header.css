@@ -7,11 +7,13 @@
 	width: 100vw;
 	z-index: 10;
 }
+
 .header_inner {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
+
 .header_logo {
 	background-color: black;
 	color: #fff;
@@ -23,25 +25,27 @@
 	padding: 0 10px;
 	text-decoration: none;
 }
+
 .header_logo:hover {
 	background-color: #4361ee;
 }
+
 .header_buttons {
-    display: flex;
-    justify-content: space-betweem;
+	display: flex;
+	justify-content: space-betweem;
 }
+
 .header_buttons button {
 	margin: 0 5px;
 }
+
 .header_text {
 	line-height: 100%;
 	font-size: 16px;
 }
+
 .header_user {
-    display: flex;
-    align-items: center;
-    height: 30px;
-}
-@media (max-width: 481px) {
-    
+	display: flex;
+	align-items: center;
+	height: 30px;
 }

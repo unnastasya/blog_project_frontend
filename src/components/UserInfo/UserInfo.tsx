@@ -12,12 +12,17 @@ export function UserInfo({
 	fullName,
 	additionalText,
 }: UserInfoProps) {
+	const time = new Date();
+	time.setTime(Date.parse(additionalText));
+
 	return (
 		<div className="userInfo_root">
 			<img className="userInfo_avatar" src={avatarUrl} alt={fullName} />
 			<div className="userInfo_userDetails">
 				<span className="userInfo_username">{fullName}</span>
-				<span className="userInfo_additional">{additionalText.toLocaleString()}</span>
+				<span className="userInfo_additional">
+					{time.toLocaleString()}
+				</span>
 			</div>
 		</div>
 	);

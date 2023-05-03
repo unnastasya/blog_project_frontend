@@ -5,7 +5,7 @@ import "./SideBlock.css";
 
 interface SideBlockProps {
 	title?: string;
-	children: any;
+	children: React.ReactNode;
 }
 
 export function SideBlock({ title, children }: SideBlockProps) {

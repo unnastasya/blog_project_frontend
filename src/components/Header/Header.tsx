@@ -1,16 +1,16 @@
 import React from "react";
-import { Button, Container } from "@mui/material";
+import { Avatar, Button, Container } from "@mui/material";
 import { Link } from "react-router-dom";
 import {
 	AuthActions,
-	DataSelector,
+	userDataSelector,
 	isAuthUserSelector,
 } from "../../store/auth";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { LogoutModal } from "../LogoutModal/LogoutModal";
+import { styled } from "@mui/material/styles";
 
 import "../Header/Header.css";
-import { styled } from "@mui/material/styles";
 
 const BootstrapButton = styled(Button)({
 	padding: "6px 5px",
@@ -19,8 +19,8 @@ const BootstrapButton = styled(Button)({
 const Header = () => {
 	const dispatch = useAppDispatch();
 	const isAuth = useAppSelector(isAuthUserSelector);
-	const dataUser = useAppSelector(DataSelector);
-	const width = window.outerWidth;
+	const activeUser = useAppSelector(userDataSelector);
+	const wimdowWidth = window.outerWidth;
 
 	const onClickLogout = () => {
 		dispatch(AuthActions.changeIsOpenLogoutModal());
@@ -34,18 +34,18 @@ const Header = () => {
 					<a className="header_logo" href="/">
 						<div>BLOG</div>
 					</a>
-					{dataUser && (
+					{activeUser && (
 						<div className="header_user">
-							{dataUser?.avatarUrl && (
-								<img
+							{activeUser?.avatarUrl && (
+								<Avatar
 									className="userInfo_avatar"
-									src={dataUser.avatarUrl}
-									alt={dataUser.fullName}
+									src={activeUser.avatarUrl}
+									alt={activeUser.fullName}
 								/>
 							)}
-							{width > 480 && (
+							{wimdowWidth > 480 && (
 								<p className="header_text">
-									{dataUser.fullName}
+									{activeUser.fullName}
 								</p>
 							)}
 						</div>
