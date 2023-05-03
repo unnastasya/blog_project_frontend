@@ -15,6 +15,8 @@
 * Typescript
 * React Hook Form
 * Yup
+* HTML
+* CSS
 
 [Сервер для проекта](https://github.com/unnastasya/blog_project_backend) написан самостоятельно
 
