@@ -1,9 +1,20 @@
 import React, { useRef, useState } from "react";
-import { Avatar, Button, Paper, TextField, Typography } from "@mui/material";
+import {
+	Alert,
+	Avatar,
+	Button,
+	Paper,
+	TextField,
+	Typography,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { AuthActions, isAuthUserSelector } from "../../store/auth";
+import {
+	AuthActions,
+	hasErrorRegisterDataSelector,
+	isAuthUserSelector,
+} from "../../store/auth";
 import { uploadAvatar } from "../../api/register";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registrationValidationSchema } from "./RegistrationValidation";
@@ -13,6 +24,7 @@ import "./Registration.css";
 export function Registration() {
 	const dispatch = useAppDispatch();
 	const isAuth = useAppSelector(isAuthUserSelector);
+	const errorMessage = useAppSelector(hasErrorRegisterDataSelector);
 	const inputFileRef = useRef<HTMLInputElement | null>(null);
 	const [imageURL, setImageURL] = useState<string>("");
 
@@ -78,7 +90,7 @@ export function Registration() {
 					<input
 						ref={inputFileRef}
 						type="file"
-						onChange={(e) => handleChangeFile(e)}
+						onChange={(e: any) => handleChangeFile(e)}
 						hidden
 					/>
 					<TextField
@@ -105,6 +117,11 @@ export function Registration() {
 						{...register("password")}
 						fullWidth
 					/>
+					{errorMessage && (
+						<Alert className="error_field" severity="error">
+							{errorMessage}
+						</Alert>
+					)}
 					<Button
 						disabled={!isValid}
 						type="submit"

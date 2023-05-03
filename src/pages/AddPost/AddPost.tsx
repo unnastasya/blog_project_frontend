@@ -24,20 +24,58 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import { allTagsSelector } from "../../store/posts";
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+	PaperProps: {
+		style: {
+			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+			width: 250,
+		},
+	},
+};
+
 export function AddPost() {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const [text, setText] = useState<string>("");
-	const [title, setTitle] = useState<string>("");
-	const [tags, setTags] = useState<string[]>([]);
-	const isAuth = useAppSelector(isAuthUserSelector);
 	const inputFileRef = useRef<HTMLInputElement | null>(null);
+	const isAuth = useAppSelector(isAuthUserSelector);
+	const ActiveUser = useAppSelector(DataSelector);
+	const [title, setTitle] = useState<string>("");
+	const [text, setText] = useState<string>("");
+	const [tags, setTags] = useState<string[]>([]);
 	const [imageURL, setImageURL] = useState<string>("");
-	const Activeuser = useAppSelector(DataSelector);
 	const [tagsData, setTagsData] = useState(useAppSelector(allTagsSelector));
 	const [tagInput, setTagInput] = useState("");
 
-	const onChange = useCallback((value: any) => {
+	const options = useMemo(
+		() => ({
+			spellChecker: false,
+			autofocus: true,
+			placeholder: "Введите текст...",
+			status: false,
+			autosave: {
+				uniqueId: String(new Date()),
+				enabled: true,
+				delay: 1000,
+			},
+		}),
+		[]
+	);
+
+	useEffect(() => {
+		if (id) {
+			getOnePost(id).then((res) => {
+				console.log(res);
+				setText(res.text);
+				setTitle(res.title);
+				setTags(res.tags);
+				setImageURL(res.imageUrl);
+			});
+		}
+	}, [id]);
+
+	const onChange = useCallback((value: string) => {
 		setText(value);
 	}, []);
 
@@ -68,40 +106,29 @@ export function AddPost() {
 		setImageURL("");
 	};
 
-	const options = useMemo(
-		() => ({
-			spellChecker: false,
-			autofocus: true,
-			placeholder: "Введите текст...",
-			status: false,
-			autosave: {
-				uniqueId: String(new Date()),
-				enabled: true,
-				delay: 1000,
-			},
-		}),
-		[]
-	);
-
-	useEffect(() => {
-		if (id) {
-			getOnePost(id).then((res) => {
-				console.log(res);
-				setText(res.text);
-				setTitle(res.title);
-				setTags(res.tags);
-				setImageURL(res.imageUrl);
-			});
-		}
-	}, [id]);
-
 	const onChangeTitle = (title: string) => {
 		setTitle(title);
 	};
 
-	// const onChangeTags = (tags: string) => {
-	// 	setTags(tags);
-	// };
+	const handleChangeTags = (event: SelectChangeEvent<typeof tags>) => {
+		const {
+			target: { value },
+		} = event;
+		setTags(typeof value === "string" ? value.split(",") : value);
+		console.log(tags);
+	};
+
+	const handleChangeTagInput = (event: string) => {
+		setTagInput(event);
+	};
+
+	const addTag = (event: any) => {
+		event.preventDefault();
+		if (tagInput !== "") {
+			setTagsData((prev) => (prev ? [...prev, tagInput] : [tagInput]));
+			setTagInput("");
+		}
+	};
 
 	const onSubmit = async () => {
 		const idParam = id;
@@ -111,7 +138,7 @@ export function AddPost() {
 				imageUrl: imageURL,
 				tags: tags,
 				text: text,
-				user: Activeuser._id,
+				user: ActiveUser._id,
 			};
 
 			console.log(fields);
@@ -149,25 +176,6 @@ export function AddPost() {
 	if (!isAuth) {
 		return <Navigate to="/" />;
 	}
-
-	const handleChange = (event: SelectChangeEvent<typeof tags>) => {
-		const {
-			target: { value },
-		} = event;
-		setTags(typeof value === "string" ? value.split(",") : value);
-		console.log(tags);
-	};
-
-	const handleChangeTagInput = (event: string) => {
-		setTagInput(event);
-	};
-
-	const addTag = () => {
-		if (tagInput != "") {
-			setTagsData((prev) => (prev ? [...prev, tagInput] : [tagInput]));
-			setTagInput("");
-		}
-	};
 
 	return (
 		<div>
@@ -212,18 +220,17 @@ export function AddPost() {
 					fullWidth
 				/>
 				<div className="tags__block">
-					<FormControl sx={{ width: "30vw" }}>
+					<FormControl sx={{ width: "40%", marginRight: "10%" }}>
 						<InputLabel>Tag</InputLabel>
 						<Select
-							labelId="demo-multiple-checkbox-label"
-							id="demo-multiple-checkbox"
 							multiple
 							value={tags}
-							onChange={handleChange}
+							onChange={handleChangeTags}
 							input={<OutlinedInput label="Tag" />}
 							renderValue={(selected) => selected.join(", ")}
+							MenuProps={MenuProps}
 						>
-							{tagsData?.map((name: any) => (
+							{tagsData?.map((name: string) => (
 								<MenuItem key={name} value={name}>
 									<Checkbox
 										checked={tags.indexOf(name) > -1}
@@ -234,9 +241,9 @@ export function AddPost() {
 						</Select>
 					</FormControl>
 
-					<form>
+					<form onSubmit={addTag} className="tag_input">
 						<TextField
-							sx={{ width: "30vw" }}
+							sx={{ width: "80%" }}
 							className="tag_input"
 							variant="outlined"
 							placeholder="тег"
@@ -248,9 +255,8 @@ export function AddPost() {
 							required
 						/>
 						<Button
-							sx={{ height: 55 }}
+							sx={{ height: 55, width: "10%" }}
 							type="submit"
-							onClick={addTag}
 							variant="outlined"
 							size="large"
 						>
@@ -268,7 +274,9 @@ export function AddPost() {
 
 				<div className="buttons">
 					<Button onClick={onSubmit}>Опубликовать</Button>
-					<Button size="large">Отмена</Button>
+					<Button size="large" onClick={() => navigate(-1)}>
+						Отмена
+					</Button>
 				</div>
 			</Paper>
 		</div>

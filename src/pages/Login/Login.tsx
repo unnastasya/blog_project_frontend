@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, Button, Paper, TextField, Typography } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
@@ -8,19 +8,19 @@ import {
 	errorMessageSelector,
 	isAuthUserSelector,
 } from "../../store/auth";
-
-import "./Login.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginValidationSchema } from "./LoginValidation";
 
+import "./Login.css";
+
 export function Login() {
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
 	const isAuth = useAppSelector(isAuthUserSelector);
 	const errorMessage = useAppSelector(errorMessageSelector);
-	const navigate = useNavigate();
 
 	const {
-		register,
+		control,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
@@ -32,7 +32,8 @@ export function Login() {
 		resolver: yupResolver(loginValidationSchema),
 	});
 
-	const onSubmit = (value: { email: string; password: string }) => {
+	const onSubmit = (data: { email: string; password: string }) => {
+		const value = { ...data };
 		console.log(value);
 		dispatch(AuthActions.changeUserRequestData(value));
 		dispatch(AuthActions.requestAuth());
@@ -49,24 +50,43 @@ export function Login() {
 					Вход в аккаунт
 				</Typography>
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<TextField
-						className="login_field"
-						label="E-Mail"
-						error={Boolean(errors.email?.message)}
-						helperText={errors.email?.message}
-						{...register("email", { required: "Укажите почту" })}
-						fullWidth
+					<Controller
+						name="email"
+						control={control}
+						render={({ field }) => (
+							<>
+								<TextField
+									className="login_field"
+									label="E-Mail"
+									error={Boolean(errors.email?.message)}
+									helperText={errors.email?.message}
+									fullWidth
+									{...field}
+								/>
+							</>
+						)}
 					/>
-					<TextField
-						className="login_field"
-						label="Пароль"
-						error={Boolean(errors.password?.message)}
-						helperText={errors.password?.message}
-						{...register("password", {
-							required: "Укажите пароль",
-						})}
-						fullWidth
+					<Controller
+						name="password"
+						control={control}
+						render={({ field }) => (
+							<>
+								<TextField
+									className="login_field"
+									label="Пароль"
+									error={Boolean(errors.password?.message)}
+									helperText={errors.password?.message}
+									fullWidth
+									{...field}
+								/>
+							</>
+						)}
 					/>
+					{errorMessage && (
+						<Alert className="error_field" severity="error">
+							{errorMessage}
+						</Alert>
+					)}
 					<Button
 						type="submit"
 						size="large"
@@ -75,9 +95,6 @@ export function Login() {
 					>
 						Войти
 					</Button>
-					{errorMessage && (
-						<Alert severity="error">{errorMessage}</Alert>
-					)}
 				</form>
 			</Paper>
 		</div>
