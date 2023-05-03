@@ -1,38 +1,36 @@
 import { CaseReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+	LoginUserType,
+	UserType,
+	RegisterUserType,
+} from "../../types/UserType";
 
 export type ProductStateType = {
-	data: any;
+	userData: UserType;
 	isLoadingData: boolean;
 	hasErrorData: boolean;
 	errorMessage: string;
-	userRequestData: { email: string; password: string };
+	loginUserRequestData: LoginUserType;
 	isAuthUser: boolean;
-	registersData: any;
 	isLoadingRegisterData: boolean;
 	hasErrorRegisterData: boolean;
-	registerUserRequestData: {
-		fullName: string;
-		email: string;
-		password: string;
-		avatarUrl: string;
-	};
+	registerUserRequestData: RegisterUserType;
 	isOpenLogoutModal: boolean;
 };
 
 const initialState: ProductStateType = {
-	data: null,
+	userData: {},
 	isLoadingData: true,
 	hasErrorData: false,
 	errorMessage: "",
-	userRequestData: { email: "test", password: "test" },
+	loginUserRequestData: { email: "", password: "" },
 	isAuthUser: false,
-	registersData: null,
 	isLoadingRegisterData: true,
 	hasErrorRegisterData: false,
 	registerUserRequestData: {
 		fullName: "",
-		email: "test",
-		password: "test",
+		email: "",
+		password: "",
 		avatarUrl: "",
 	},
 	isOpenLogoutModal: false,
@@ -49,16 +47,14 @@ const requestAuthMe: CaseReducer<ProductStateType> = (state) => {
 	state.hasErrorData = false;
 };
 
-const successAuth: CaseReducer<ProductStateType, PayloadAction<any>> = (
+const successAuth: CaseReducer<ProductStateType, PayloadAction<UserType>> = (
 	state,
 	{ payload }
 ) => {
 	state.isLoadingData = false;
 	state.hasErrorData = false;
-	state.data = payload;
+	state.userData = payload;
 	state.errorMessage = "";
-
-	console.log("payload", payload);
 
 	if ("_id" in payload) {
 		state.isAuthUser = true;
@@ -73,22 +69,22 @@ const successAuth: CaseReducer<ProductStateType, PayloadAction<any>> = (
 
 const failureAuth: CaseReducer<ProductStateType, PayloadAction<string>> = (
 	state,
-	payload
+	payload?
 ) => {
 	state.isLoadingData = false;
 	state.hasErrorData = true;
-	state.errorMessage = payload.payload;
+	state.errorMessage = payload?.payload;
 };
 
 const changeUserRequestData: CaseReducer<
 	ProductStateType,
-	PayloadAction<{ email: string; password: string }>
+	PayloadAction<LoginUserType>
 > = (state, payload) => {
-	state.userRequestData = payload.payload;
+	state.loginUserRequestData = payload.payload;
 };
 
 const logout: CaseReducer<ProductStateType> = (state) => {
-	state.data = null;
+	state.userData = {};
 	state.isAuthUser = false;
 
 	window.localStorage.removeItem("token");
@@ -99,15 +95,13 @@ const requestRegister: CaseReducer<ProductStateType> = (state) => {
 	state.hasErrorRegisterData = false;
 };
 
-const successRegister: CaseReducer<ProductStateType, PayloadAction<any>> = (
-	state,
-	{ payload }
-) => {
+const successRegister: CaseReducer<
+	ProductStateType,
+	PayloadAction<UserType>
+> = (state, { payload }) => {
 	state.isLoadingRegisterData = false;
 	state.hasErrorRegisterData = false;
-	state.registersData = payload;
-
-	console.log("payload register user", payload);
+	state.userData = payload;
 };
 
 const failureRegister: CaseReducer<ProductStateType> = (state) => {
@@ -140,11 +134,11 @@ export const { actions: AuthActions, reducer: AuthReducer } = createSlice({
 		successAuth,
 		failureAuth,
 		changeUserRequestData,
-		logout,
 		requestRegister,
 		successRegister,
 		failureRegister,
 		changeRegisterUserRequestData,
 		changeIsOpenLogoutModal,
+		logout,
 	},
 });

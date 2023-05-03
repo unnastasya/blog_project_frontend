@@ -9,15 +9,14 @@ import {
 	watchgetDeletePostSaga,
 	watchgetGetLastCommentsSaga,
 	watchgetOnePostsSaga,
+	watchGetPostsCommentsSaga,
 	watchGetPostsSaga,
 	watchGetPostsWithTagsSaga,
-	watchGetTagsSaga,
 } from "./posts";
 
 export function* rootSaga() {
 	yield fork(watchGetPostsSaga);
 	yield fork(watchgetOnePostsSaga);
-	yield fork(watchGetTagsSaga);
 	yield fork(watchGetAuthSaga);
 	yield fork(watchGetRegisterSaga);
 	yield fork(watchgetDeletePostSaga);
@@ -25,4 +24,5 @@ export function* rootSaga() {
 	yield fork(watchGetAllTagsSaga);
 	yield fork(watchgetGetLastCommentsSaga);
 	yield fork(watchGetPostsWithTagsSaga);
+    yield fork(watchGetPostsCommentsSaga)
 }
