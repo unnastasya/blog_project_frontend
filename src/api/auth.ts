@@ -1,7 +1,8 @@
 import axios from "axios";
 import qs from "qs";
+import { LoginUserType, UserType } from "../types/UserType";
 
-export const postAuth = (params: any): Promise<any> => {
+export const postAuth = (params: LoginUserType): Promise<UserType> => {
 	return axios
 		.post(`http://localhost:4444/auth/login`, qs.stringify(params), {
 			headers: {
@@ -12,8 +13,7 @@ export const postAuth = (params: any): Promise<any> => {
 		.catch((error) => error);
 };
 
-export const postAuthMe = (): Promise<any> => {
-	console.log("saga");
+export const postAuthMe = (): Promise<UserType> => {
 	return axios
 		.get(`http://localhost:4444/auth/me`, {
 			headers: {
